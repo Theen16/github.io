@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบลงทะเบียนเข้าพักด้วย OCR บัตรประชาชน</title>
+    <title>ระบบลงทะเบียนเข้าพักอัจฉริยะ</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-50 font-sans min-h-screen pb-12">
 
     <nav class="bg-blue-700 text-white p-4 shadow-md mb-6">
-        <div class="max-w-3xl mx-auto font-bold text-lg flex items-center gap-2">
-            <span>🏨 ระบบ Check-in สแกนข้อความภาษาไทยอัตโนมัติ</span>
+        <div class="max-w-3xl mx-auto font-bold text-lg">
+            🏨 ระบบลงทะเบียนเข้าพัก (สแกนข้อมูลภาษาไทยสมบูรณ์แบบ)
         </div>
     </nav>
 
     <main class="max-w-3xl mx-auto p-4 space-y-6">
         
         <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-            <h2 class="text-base font-bold text-slate-800 mb-4">1. ถ่ายภาพหรือเลือกรูปถ่ายบัตรประชาชน (เน้นตัวหนังสือภาษาไทยชัดเจน)</h2>
+            <h2 class="text-base font-bold text-slate-800 mb-4">1. ถ่ายภาพหรือเลือกรูปถ่ายบัตรประชาชน (วางบัตรแนวราบ ชัดเจน ไม่ย้อนแสง)</h2>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                 <button type="button" onclick="document.getElementById('cameraInput').click()" class="bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold py-3.5 px-4 rounded-xl border border-blue-200 text-center transition shadow-sm">
@@ -40,66 +40,66 @@
                 ⚡ เริ่มสแกนข้อความภาษาไทย (OCR)
             </button>
             
-            <div id="loadingStatus" class="text-center font-bold text-blue-600 p-3 bg-blue-50 rounded-xl mt-3 hidden animate-pulse">ระบบกำลังอ่านข้อมูลภาษาไทยจากหน้าบัตร กรุณารอสักครู่...</div>
+            <div id="loadingStatus" class="text-center font-bold text-blue-600 p-3 bg-blue-50 rounded-xl mt-3 hidden animate-pulse">ระบบกำลังสกัดข้อมูลตามโครงสร้างบัตรประชาชน กรุณารอสักครู่...</div>
         </div>
 
         <form id="checkinForm" onsubmit="saveToGoogleSheets(event)" class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
-            <h2 class="text-base font-bold text-slate-800 border-b pb-2 flex items-center gap-1">📝 2. ข้อมูลสแกน (โปรดตรวจสอบความถูกต้อง)</h2>
+            <h2 class="text-base font-bold text-slate-800 border-b pb-2">📝 2. ข้อมูลจากบัตรประชาชน</h2>
             
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div class="sm:col-span-1">
                     <label class="text-xs font-bold text-slate-600">เลขบัตรประชาชน</label>
-                    <input type="text" id="idCard" class="mt-1 w-full p-3 border rounded-xl font-mono text-sm bg-slate-50 focus:bg-white focus:ring-1 focus:ring-blue-500" required>
+                    <input type="text" id="idCard" class="mt-1 w-full p-3 border rounded-xl font-mono text-sm bg-slate-50" required>
                 </div>
                 <div class="sm:col-span-2">
                     <label class="text-xs font-bold text-slate-600">ชื่อตัวและชื่อสกุล</label>
-                    <input type="text" id="fullName" class="mt-1 w-full p-3 border rounded-xl bg-slate-50 focus:bg-white focus:ring-1 focus:ring-blue-500" required>
+                    <input type="text" id="fullName" class="mt-1 w-full p-3 border rounded-xl bg-slate-50" required>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                     <label class="text-xs font-bold text-slate-600">เกิดวันที่</label>
-                    <input type="text" id="birthDate" placeholder="เช่น 1 ม.ค. 2530" class="mt-1 w-full p-3 border rounded-xl bg-slate-50 focus:bg-white focus:ring-1 focus:ring-blue-500">
+                    <input type="text" id="birthDate" placeholder="เช่น 22 มิ.ย. 2544" class="mt-1 w-full p-3 border rounded-xl bg-slate-50">
                 </div>
                 <div>
                     <label class="text-xs font-bold text-slate-600">วันออกบัตร</label>
-                    <input type="text" id="issueDate" placeholder="เช่น 5 มี.ค. 2565" class="mt-1 w-full p-3 border rounded-xl bg-slate-50 focus:bg-white focus:ring-1 focus:ring-blue-500">
+                    <input type="text" id="issueDate" placeholder="เช่น 27 มี.ค. 2563" class="mt-1 w-full p-3 border rounded-xl bg-slate-50">
                 </div>
                 <div>
                     <label class="text-xs font-bold text-slate-600">วันบัตรหมดอายุ</label>
-                    <input type="text" id="expiryDate" placeholder="เช่น 4 มี.ค. 2573" class="mt-1 w-full p-3 border rounded-xl bg-slate-50 focus:bg-white focus:ring-1 focus:ring-blue-500">
+                    <input type="text" id="expiryDate" placeholder="เช่น 21 มิ.ย. 2571" class="mt-1 w-full p-3 border rounded-xl bg-slate-50">
                 </div>
             </div>
 
             <div>
                 <label class="text-xs font-bold text-slate-600">ที่อยู่</label>
-                <textarea id="address" rows="3" class="mt-1 w-full p-3 border rounded-xl bg-slate-50 focus:bg-white focus:ring-1 focus:ring-blue-500"></textarea>
+                <textarea id="address" rows="3" class="mt-1 w-full p-3 border rounded-xl bg-slate-50"></textarea>
             </div>
 
             <div id="rawBox" class="bg-amber-50 p-3 rounded-xl border border-amber-200 hidden">
-                <label class="text-xs font-bold text-amber-800 block mb-1">💡 ข้อความดิบทั้งหมดที่ระบบสแกนเจอ:</label>
-                <textarea id="rawTextArea" rows="3" readonly class="w-full p-2 text-xs bg-white border border-amber-300 rounded-lg text-slate-600 font-mono"></textarea>
+                <label class="text-xs font-bold text-amber-800 block mb-1">💡 ข้อความดิบทั้งหมดที่ AI มองเห็น (ก๊อปปี้เติมส่วนที่ขาดได้ง่ายขึ้น):</label>
+                <textarea id="rawTextArea" rows="4" readonly class="w-full p-2 text-xs bg-white border border-amber-300 rounded-lg text-slate-600 font-mono"></textarea>
             </div>
 
-            <h2 class="text-base font-bold text-slate-800 border-b pb-2 pt-4 flex items-center gap-1">🔑 3. รายละเอียดการเข้าพัก (ผู้ดูแลกรอกเพิ่ม)</h2>
+            <h2 class="text-base font-bold text-slate-800 border-b pb-2 pt-4">🔑 3. ข้อมูลการเข้าพักเพิ่มเติม</h2>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="text-xs font-bold text-slate-600">เบอร์โทรศัพท์</label>
-                    <input type="tel" id="phone" class="mt-1 w-full p-3 border rounded-xl focus:ring-1 focus:ring-blue-500" required>
+                    <input type="tel" id="phone" class="mt-1 w-full p-3 border rounded-xl" required>
                 </div>
                 <div>
                     <label class="text-xs font-bold text-slate-600">เลขห้องพัก</label>
-                    <input type="text" id="roomNumber" class="mt-1 w-full p-3 border rounded-xl focus:ring-1 focus:ring-blue-500" required>
+                    <input type="text" id="roomNumber" class="mt-1 w-full p-3 border rounded-xl" required>
                 </div>
                 <div>
                     <label class="text-xs font-bold text-slate-600">วันเข้าพัก</label>
-                    <input type="date" id="checkInDate" class="mt-1 w-full p-3 border rounded-xl focus:ring-1 focus:ring-blue-500" required>
+                    <input type="date" id="checkInDate" class="mt-1 w-full p-3 border rounded-xl" required>
                 </div>
                 <div>
                     <label class="text-xs font-bold text-slate-600">วันออก</label>
-                    <input type="date" id="checkOutDate" class="mt-1 w-full p-3 border rounded-xl focus:ring-1 focus:ring-blue-500" required>
+                    <input type="date" id="checkOutDate" class="mt-1 w-full p-3 border rounded-xl" required>
                 </div>
             </div>
 
@@ -110,7 +110,7 @@
     </main>
 
     <script>
-        // 🔴 นำ URL เว็บแอปที่ได้จากการ Deploy ใน Google Apps Script เวอร์ชันล่าสุดมาแปะตรงนี้ครับ
+        // 🔴 นำ URL เว็บแอปใหม่จากการเซ็ตอัปสำเร็จใน Apps Script มาแปะที่นี่ครับ
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwF1YDJhqdK_n_DWhYylfPfjhAZnLiNd3pbxysoADQTma5aiCbW5Gu68M6jMXrkO2fb5A/exec"; 
         let base64ImageStr = "";
 
@@ -125,7 +125,6 @@
                 document.getElementById('previewPlaceholder').classList.add('hidden');
                 document.getElementById('ocrBtn').disabled = false;
                 
-                // ถอดเอาเฉพาะข้อความ Base64 ดิบส่งไปยัง API หลังบ้าน
                 base64ImageStr = e.target.result.split(',')[1];
             };
             reader.readAsDataURL(file);
@@ -146,7 +145,7 @@
                 const result = await response.json();
                 
                 if (result.status === "success") {
-                    // จัดการแมปค่าข้อความภาษาไทยลงฟอร์มเป๊ะๆ
+                    // แมปปิ้งผลลัพธ์ข้อมูลภาษาไทยเข้าช่องฟอร์ม
                     document.getElementById('idCard').value = result.data.idCard || "";
                     document.getElementById('fullName').value = result.data.fullName || "";
                     document.getElementById('birthDate').value = result.data.birthDate || "";
@@ -154,17 +153,17 @@
                     document.getElementById('issueDate').value = result.data.issueDate || "";
                     document.getElementById('expiryDate').value = result.data.expiryDate || "";
                     
-                    // แสดงผลข้อความดิบในกรณีฉุกเฉินเผื่อมีคำตกหล่น
+                    // อัปเดตช่องข้อความดิบรวม
                     document.getElementById('rawTextArea').value = result.rawText || "";
                     document.getElementById('rawBox').classList.remove('hidden');
                     
                     document.getElementById('saveBtn').disabled = false;
-                    alert("สแกนข้อมูลภาษาไทยสำเร็จ! กรุณาตรวจความถูกต้องและระบุห้องพักเพิ่มเติม");
+                    alert("สแกนเสร็จสิ้น! โปรดตรวจสอบความถูกต้องและบันทึกข้อมูล");
                 } else {
-                    alert("การประมวลผลผิดพลาด: " + result.message);
+                    alert("การประมวลผลล้มเหลว: " + result.message);
                 }
             } catch (err) {
-                alert("เกิดปัญหาการเชื่อมต่อ ไปยังแอปหลังบ้าน");
+                alert("ไม่สามารถสื่อสารกับเซิร์ฟเวอร์หลังบ้านได้");
             } finally {
                 document.getElementById('loadingStatus').classList.add('hidden');
                 ocrBtn.disabled = false;
@@ -196,7 +195,7 @@
                 });
                 const res = await response.json();
                 if (res.status === "success") {
-                    alert("🎉 บันทึกข้อมูลเข้า Google Sheets เรียบร้อยแล้ว!");
+                    alert("🎉 บันทึกข้อมูลเรียบร้อยแล้ว!");
                     document.getElementById('checkinForm').reset();
                     document.getElementById('imgPreview').classList.add('hidden');
                     document.getElementById('previewPlaceholder').classList.remove('hidden');
@@ -206,7 +205,7 @@
                     alert("บันทึกไม่สำเร็จ: " + res.message);
                 }
             } catch (err) {
-                alert("ไม่สามารถบันทึกข้อมูลได้เนื่องจากระบบขัดข้อง");
+                alert("เกิดความผิดพลาดในการส่งข้อมูลบันทึก");
             } finally {
                 saveBtn.disabled = false;
             }

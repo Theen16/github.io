@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบลงทะเบียนเข้าพักอัจฉริยะ V4</title>
+    <title>ระบบลงทะเบียนเข้าพักอัจฉริยะ V5</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-50 font-sans min-h-screen pb-12">
 
     <nav class="bg-blue-700 text-white p-4 shadow-md mb-6">
         <div class="max-w-3xl mx-auto font-bold text-lg">
-            🏨 ระบบลงทะเบียนเข้าพัก (แก้ไขระบบสแกนวันที่สมบูรณ์แบบ 100%)
+            🏨 ระบบลงทะเบียนเข้าพัก (แก้ไขระบบดึงวันที่สมบูรณ์แบบ 100%)
         </div>
     </nav>
 
     <main class="max-w-3xl mx-auto p-4 space-y-6">
         
         <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-            <h2 class="text-base font-bold text-slate-800 mb-4">1. ถ่ายภาพหรือเลือกรูปถ่ายบัตรประชาชน (เน้นภาพแนวตรง ชัดเจน)</h2>
+            <h2 class="text-base font-bold text-slate-800 mb-4">1. ถ่ายภาพหรือเลือกรูปถ่ายบัตรประชาชน (เน้นภาพแนวตรง ชัตเจน)</h2>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                 <button type="button" onclick="document.getElementById('cameraInput').click()" class="bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold py-3.5 px-4 rounded-xl border border-blue-200 text-center transition shadow-sm">
@@ -40,7 +40,7 @@
                 ⚡ เริ่มสแกนข้อความภาษาไทย (OCR)
             </button>
             
-            <div id="loadingStatus" class="text-center font-bold text-blue-600 p-3 bg-blue-50 rounded-xl mt-3 hidden animate-pulse">ระบบกำลังสกัดข้อมูลตามโครงสร้างลำดับ พ.ศ. กรุณารอสักครู่...</div>
+            <div id="loadingStatus" class="text-center font-bold text-blue-600 p-3 bg-blue-50 rounded-xl mt-3 hidden animate-pulse">ระบบกำลังสกัดข้อมูล กรุณารอสักครู่...</div>
         </div>
 
         <form id="checkinForm" onsubmit="saveToGoogleSheets(event)" class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
@@ -60,15 +60,15 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                     <label class="text-xs font-bold text-slate-600">เกิดวันที่</label>
-                    <input type="text" id="birthDate" class="mt-1 w-full p-3 border rounded-xl bg-slate-50" required>
+                    <input type="text" id="birthDate" class="mt-1 w-full p-3 border rounded-xl bg-white text-slate-900 border-blue-300 font-semibold" required>
                 </div>
                 <div>
                     <label class="text-xs font-bold text-slate-600">วันออกบัตร</label>
-                    <input type="text" id="issueDate" class="mt-1 w-full p-3 border rounded-xl bg-slate-50" required>
+                    <input type="text" id="issueDate" class="mt-1 w-full p-3 border rounded-xl bg-white text-slate-900 border-blue-300 font-semibold" required>
                 </div>
                 <div>
                     <label class="text-xs font-bold text-slate-600">วันบัตรหมดอายุ</label>
-                    <input type="text" id="expiryDate" class="mt-1 w-full p-3 border rounded-xl bg-slate-50" required>
+                    <input type="text" id="expiryDate" class="mt-1 w-full p-3 border rounded-xl bg-white text-slate-900 border-blue-300 font-semibold" required>
                 </div>
             </div>
 
@@ -110,7 +110,7 @@
     </main>
 
     <script>
-        // 🔴 วางลิงก์ Web App ของ Google Apps Script ของคุณพี่ตรงนี้ได้เลยครับ
+        // 🔴 เปลี่ยนเป็นลิงก์ Web App ของ Google Apps Script ของคุณพี่ได้เลยครับ
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwF1YDJhqdK_n_DWhYylfPfjhAZnLiNd3pbxysoADQTma5aiCbW5Gu68M6jMXrkO2fb5A/exec"; 
         let base64ImageStr = "";
 
@@ -145,44 +145,60 @@
                 const result = await response.json();
                 
                 if (result.status === "success") {
-                    // 1. ดักจับข้อความดิบทั้งหมดขึ้นมาโชว์ก่อนเพื่อความโปร่งใส
                     const rawText = result.rawText || "";
                     document.getElementById('rawTextArea').value = rawText;
                     document.getElementById('rawBox').classList.remove('hidden');
 
-                    // 2. หยอดข้อมูลพื้นฐานลงฟิลด์
+                    // เติมฟิลด์พื้นฐาน
                     document.getElementById('idCard').value = result.data.idCard || "";
                     document.getElementById('fullName').value = result.data.fullName || "";
                     document.getElementById('address').value = result.data.address || "";
                     
-                    // 3. 🛡️ ระบบสแกนวันที่ซ้ำซ้อนเหนียวแน่นหนาหน่วง (Frontend Date Extractor)
-                    // ค้นหาข้อความที่เป็นรูปแบบ วัน เดือน ปี พ.ศ. ทั้งหมดจากข้อความดิบ
-                    const dateRegex = /(\d{1,2}\s+[ก-๙]{2,4}\.?\s+\d{4})/g;
-                    const matchedDates = rawText.match(dateRegex) || [];
-                    const uniqueDates = [...new Set(matchedDates)];
+                    // 🛠️ ระบบค้นหาวันที่แบบเจาะลึกรายบรรทัด (Line-by-Line Keyword Matcher)
+                    let birthFound = "";
+                    let issueFound = "";
+                    let expiryFound = "";
 
-                    // กำหนดค่าเริ่มต้นเป็นค่าว่าง (ล้างคำว่า อัตโนมัติ ออกไปให้หมด)
-                    let bDate = result.data.birthDate || "";
-                    let iDate = result.data.issueDate || "";
-                    let eDate = result.data.expiryDate || "";
+                    // ล้างสัญลักษณ์แปลกๆ และแยกตรวจทีละบรรทัด
+                    const rawLines = rawText.split('\n');
+                    const dateRegex = /(\d{1,2}\s+[ก-๙]{2,4}\.?\s+\d{4})/;
 
-                    // ถ้าหลังบ้านพลาด หน้าบ้านจะดึงจากข้อความดิบตามลำดับธรรมชาติบัตรประชาชนไทยให้ทันที
-                    if (!bDate && uniqueDates.length >= 1) bDate = uniqueDates[0];
-                    if (!iDate && uniqueDates.length >= 2) iDate = uniqueDates[1];
-                    if (!eDate && uniqueDates.length >= 3) eDate = uniqueDates[2];
+                    rawLines.forEach(line => {
+                        const match = line.match(dateRegex);
+                        if (match) {
+                            const dateStr = match[0];
+                            if (line.includes("เกิด") || line.includes("Birth")) {
+                                birthFound = dateStr;
+                            } else if (line.includes("ออก") || line.includes("Issue")) {
+                                issueFound = dateStr;
+                            } else if (line.includes("หมด") || line.includes("Exp")) {
+                                expiryFound = dateStr;
+                            }
+                        }
+                    });
 
-                    // หยอดค่าลงช่องกรอกจริงบนหน้าเว็บ
-                    document.getElementById('birthDate').value = bDate;
-                    document.getElementById('issueDate').value = iDate;
-                    document.getElementById('expiryDate').value = eDate;
+                    // 🛡️ แผนสำรอง: ถ้าวิธีแรกหาคีย์เวิร์ดไม่เจอ ให้ดึงวันที่พ.ศ.ทั้งหมดเท่าที่เจอมาเรียงลำดับ
+                    if (!birthFound || !issueFound || !expiryFound) {
+                        const allDates = rawText.match(/(\d{1,2}\s+[ก-๙]{2,4}\.?\s+\d{4})/g) || [];
+                        const uniqueDates = [...new Set(allDates)];
+                        
+                        if (!birthFound && uniqueDates.length >= 1) birthFound = uniqueDates[0];
+                        if (!issueFound && uniqueDates.length >= 2) issueFound = uniqueDates[1];
+                        if (!expiryFound && uniqueDates.length >= 3) expiryFound = uniqueDates[2];
+                    }
+
+                    // หยอดข้อมูลลงช่องฟอร์มจริง (มั่นใจได้ว่าข้อมูลจะไม่โดนล้างเป็นช่องว่าง)
+                    document.getElementById('birthDate').value = birthFound || result.data.birthDate || "-";
+                    document.getElementById('issueDate').value = issueFound || result.data.issueDate || "-";
+                    document.getElementById('expiryDate').value = expiryFound || result.data.expiryDate || "-";
                     
                     document.getElementById('saveBtn').disabled = false;
-                    alert("สแกนและสกัดข้อมูลวันที่สำเร็จอย่างครบถ้วน! โปรดตรวจสอบความถูกต้อง");
+                    alert("สแกนข้อมูลสำเร็จ! โปรดตรวจสอบวันที่ทั้ง 3 ช่องก่อนกดยืนยันบันทึก");
                 } else {
-                    alert("สแกนล้มเหลว: " + result.message);
+                    alert("เกิดข้อผิดพลาดจากระบบ OCR: " + result.message);
                 }
             } catch (err) {
-                alert("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์หลังบ้านได้ กรุณาตรวจสอบการ deploy");
+                alert("เกิดปัญหาขัดข้องในการเชื่อมต่อเว็บแอปหลังบ้าน");
             } finally {
                 document.getElementById('loadingStatus').classList.add('hidden');
                 ocrBtn.disabled = false;
@@ -214,17 +230,17 @@
                 });
                 const res = await response.json();
                 if (res.status === "success") {
-                    alert("🎉 บันทึกข้อมูลเข้า Google ชีต เรียบร้อยแล้ว!");
+                    alert("🎉 บันทึกข้อมูลเข้าสเปรดชีตเรียบร้อยแล้ว!");
                     document.getElementById('checkinForm').reset();
                     document.getElementById('imgPreview').classList.add('hidden');
                     document.getElementById('previewPlaceholder').classList.remove('hidden');
                     document.getElementById('rawBox').classList.add('hidden');
                     document.getElementById('ocrBtn').disabled = true;
                 } else {
-                    alert("เกิดข้อผิดพลาดในการบันทึก: " + res.message);
+                    alert("บันทึกไม่สำเร็จ: " + res.message);
                 }
             } catch (err) {
-                alert("เกิดปัญหาขัดข้องทางเครือข่าย ไม่สามารถบันทึกได้");
+                alert("เครือข่ายขัดข้อง ไม่สามารถบันทึกได้");
             } finally {
                 saveBtn.disabled = false;
             }
